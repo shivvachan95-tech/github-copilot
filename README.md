@@ -2,10 +2,19 @@
 
 This repository contains work for the GitHub Copilot project.
 
-## Request changes
-- Improve the Go to start button and go to move button area with nice color
-- sound effect for game over
-- UI improvemnt and make little interactive
+## Request changes ✅ Implemented
+
+- ✅ **Improved button styling** — History buttons and reset button now have vibrant colors, gradients, hover effects, and smooth animations
+- ✅ **Game over sound effect** — Added Web Audio API sound when a winner is detected (descending frequency tone)
+- ✅ **Enhanced UI interactivity** — Dark theme with gradient backgrounds, emoji indicators for X and O, smooth animations, visual feedback on interactions, status box with player/winner display
+
+### Recent Updates (Tick Tock v2)
+- Dark blue gradient theme with modern styling
+- Animated transitions and hover effects
+- Color-coded buttons: Red for Reset, Blue for History navigation
+- Winner/Draw detection with visual feedback
+- Move history with active state highlighting
+- Improved accessibility with emoji icons and better contrast
 
 
 ## Tic-Tac-Toe (Tick Tock) — React demo

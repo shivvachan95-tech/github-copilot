@@ -1,10 +1,262 @@
-:root{ --bg:#f7fafc; --card:#fff; --muted:#6b7280; --accent:#f59e0b }
-body{ font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); margin:0; padding:24px }
+:root{ 
+  --bg:#0f172a; 
+  --card:#1e293b;
+  --accent:#3b82f6;
+  --success:#10b981;
+  --warning:#f59e0b;
+  --danger:#ef4444;
+  --text:#f1f5f9;
+  --text-muted:#94a3b8;
+  --radius:12px;
+}
+
+body{ 
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
+  background: linear-gradient(135deg, var(--bg) 0%, #1a1f3a 100%); 
+  margin:0; 
+  padding:24px;
+  color: var(--text);
+  min-height: 100vh;
+}
+
 .container{ max-width:900px; margin:0 auto }
-.game{ display:flex; gap:24px; align-items:flex-start }
-.board{ display:grid; grid-template-columns:repeat(3,96px); gap:8px }
-.square{ width:96px; height:96px; display:flex; align-items:center; justify-content:center; font-size:40px; background:var(--card); border-radius:8px; border:1px solid #e6edf3; cursor:pointer }
-.square.winning{ background:#fffbeb; border:2px solid var(--accent) }
-.info{ max-width:300px }
-.moves{ margin-top:12px }
-.controls{ margin-top:12px }
+
+.title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin: 0 0 24px 0;
+  background: linear-gradient(135deg, var(--accent), var(--success));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: slideDown 0.6s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.game{ 
+  display:flex; 
+  gap:32px; 
+  align-items:flex-start;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.board{ 
+  display:grid; 
+  grid-template-columns:repeat(3, 110px); 
+  gap:12px;
+  background: rgba(30, 41, 59, 0.5);
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 2px solid var(--accent);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.square{ 
+  width:110px; 
+  height:110px; 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  font-size:48px; 
+  background: var(--card); 
+  border-radius: calc(var(--radius) - 4px);
+  border: 2px solid var(--accent);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: bold;
+}
+
+.square:hover:not(.filled) { 
+  background: rgba(59, 130, 246, 0.1);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.square.filled {
+  animation: popIn 0.3s ease-out;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.square.winning { 
+  background: linear-gradient(135deg, var(--success), var(--accent));
+  border: 2px solid var(--success);
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
+  animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.info{ 
+  max-width:380px;
+  background: rgba(30, 41, 59, 0.6);
+  padding: 24px;
+  border-radius: var(--radius);
+  border: 2px solid var(--accent);
+  backdrop-filter: blur(10px);
+}
+
+.status-box {
+  padding: 16px;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-left: 4px solid var(--accent);
+}
+
+.winner-display {
+  color: var(--success);
+  animation: slideInLeft 0.5s ease-out;
+}
+
+.winner-text {
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: var(--success);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.draw-display {
+  color: var(--warning);
+  animation: slideInLeft 0.5s ease-out;
+}
+
+.next-player {
+  color: var(--text);
+}
+
+.player-text {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.controls{ 
+  margin: 16px 0;
+}
+
+.reset-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--danger), #dc2626);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.reset-btn:hover {
+  background: linear-gradient(135deg, #dc2626, var(--danger));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(239, 68, 68, 0.5);
+}
+
+.reset-btn:active {
+  transform: translateY(0);
+}
+
+.moves{ 
+  margin-top: 20px;
+}
+
+.moves strong {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+
+.move-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.move-list li {
+  margin: 0;
+}
+
+.history-btn {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--text-muted);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.history-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+
+.history-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  font-weight: 600;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+/* Scrollbar styling */
+.move-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.move-list::-webkit-scrollbar-track {
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 3px;
+}
+
+.move-list::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.move-list::-webkit-scrollbar-thumb:hover {
+  background: var(--success);
+}

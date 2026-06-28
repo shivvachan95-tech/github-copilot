@@ -15,10 +15,35 @@ function calculateWinner(squares) {
   return null;
 }
 
+// Simple game over sound using Web Audio API
+function playGameOverSound() {
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.3);
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+  } catch (e) {
+    console.log('Audio API not supported');
+  }
+}
+
 function Square({value, onClick, isWinning}){
+  const getEmoji = (val) => val === 'X' ? '❌' : val === 'O' ? '⭕' : '';
   return (
-    <button className={`square ${isWinning? 'winning':''}`} onClick={onClick}>
-      {value}
+    <button className={`square ${isWinning? 'winning':''} ${value? 'filled':''}`} onClick={onClick}>
+      {getEmoji(value)}
     </button>
   )
 }
@@ -34,9 +59,18 @@ function Board({squares, onClick, winningLine}){
 export default function App(){
   const [history, setHistory] = useState([Array(9).fill(null)])
   const [step, setStep] = useState(0)
+  const [gameEnded, setGameEnded] = useState(false)
   const squares = history[step].slice()
   const win = calculateWinner(squares)
   const xIsNext = (step % 2) === 0
+  const isBoardFull = squares.every(s => s !== null)
+  
+  React.useEffect(() => {
+    if (win && !gameEnded) {
+      playGameOverSound();
+      setGameEnded(true);
+    }
+  }, [win, gameEnded])
 
   function handleClick(i){
     if (win || squares[i]) return;
@@ -47,24 +81,47 @@ export default function App(){
     setStep(step+1);
   }
 
-  function jumpTo(move){ setStep(move); }
+  function jumpTo(move){ 
+    setStep(move);
+    setGameEnded(false);
+  }
 
-  function reset(){ setHistory([Array(9).fill(null)]); setStep(0); }
+  function reset(){ 
+    setHistory([Array(9).fill(null)]);
+    setStep(0);
+    setGameEnded(false);
+  }
 
   return (
     <div className="container">
-      <h1>Tick Tock — Tic-Tac-Toe</h1>
+      <h1 className="title">🎮 Tick Tock — Tic-Tac-Toe</h1>
       <div className="game">
         <Board squares={squares} onClick={handleClick} winningLine={win && win.line} />
         <div className="info">
-          <div><strong>Next:</strong> {win ? '—' : (xIsNext ? 'X' : 'O')}</div>
-          {win ? (<div style={{marginTop:8}}><strong>Winner:</strong> {win.winner}</div>) : null}
-          <div className="controls"><button onClick={reset}>Reset</button></div>
+          <div className="status-box">
+            {win ? (
+              <div className="winner-display">🏆 Winner: <span className="winner-text">{win.winner}</span></div>
+            ) : isBoardFull ? (
+              <div className="draw-display">🤝 It's a Draw!</div>
+            ) : (
+              <div className="next-player">Current Player: <span className="player-text">{xIsNext ? '❌ X' : '⭕ O'}</span></div>
+            )}
+          </div>
+          <div className="controls">
+            <button className="reset-btn" onClick={reset}>🔄 Reset Game</button>
+          </div>
           <div className="moves">
-            <strong>History</strong>
-            <ol>
+            <strong>📜 Move History</strong>
+            <ol className="move-list">
               {history.map((_,move)=> (
-                <li key={move}><button onClick={() => jumpTo(move)} style={{fontWeight: move===step? 'bold':'normal'}}>{move===0? 'Go to start' : `Go to move #${move}`}</button></li>
+                <li key={move}>
+                  <button 
+                    className={`history-btn ${move===step? 'active':''}`}
+                    onClick={() => jumpTo(move)}
+                  >
+                    {move===0? '🏠 Start' : `#${move}`}
+                  </button>
+                </li>
               ))}
             </ol>
           </div>

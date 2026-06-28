@@ -5,7 +5,7 @@ This repository contains work for the GitHub Copilot project.
 ## Request changes
 - Improve the Go to start button and go to move button area with nice color
 - sound effect for game over
--UI improvemnt
+- UI improvemnt and make little interactive
 
 
 ## Tic-Tac-Toe (Tick Tock) — React demo

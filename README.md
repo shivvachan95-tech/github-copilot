@@ -2,6 +2,12 @@
 
 This repository contains work for the GitHub Copilot project.
 
+## Request changes
+- Improve the Go to start button and go to move button area with nice color
+- sound effect for game over
+-UI improvemnt
+
+
 ## Tic-Tac-Toe (Tick Tock) — React demo
 
 A simple Tic-Tac-Toe game built with React (single-file demo using CDN builds). This demo is intended as a small interactive project to learn React and practice component/state design.

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tic-Tac-Toe (Tick Tock) - React Demo</title>
+    <style>
+      body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; padding: 24px; background:#f7fafc; }
+      .game { display:flex; gap:24px; align-items:flex-start; max-width:820px; margin:0 auto; }
+      .board { display:grid; grid-template-columns:repeat(3, 96px); gap:8px; }
+      .square { width:96px; height:96px; display:flex; align-items:center; justify-content:center; font-size:40px; background:white; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); cursor:pointer; }
+      .square.winning { background: #fffbeb; border: 2px solid #f59e0b; }
+      .info { max-width:300px; }
+      .moves { margin-top:12px; max-height:300px; overflow:auto; }
+      button { padding:8px 12px; border-radius:6px; border:1px solid #e2e8f0; background:white; cursor:pointer; }
+      .controls { display:flex; gap:8px; margin-top:12px; }
+    </style>
+  </head>
+  <body>
+    <h1>Tic-Tac-Toe (Tick Tock)</h1>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const { useState } = React;
+
+      function calculateWinner(squares) {
+        const lines = [
+          [0,1,2],[3,4,5],[6,7,8],
+          [0,3,6],[1,4,7],[2,5,8],
+          [0,4,8],[2,4,6]
+        ];
+        for (const [a,b,c] of lines) {
+          if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+            return { winner: squares[a], line: [a,b,c] };
+          }
+        }
+        return null;
+      }
+
+      function Square({value, onClick, isWinning}){
+        return (
+          <div className={"square" + (isWinning? ' winning':'')} onClick={onClick}>
+            {value}
+          </div>
+        );
+      }
+
+      function Board({squares, onClick, winningLine}){
+        function renderSquare(i) {
+          const isWinning = winningLine && winningLine.includes(i);
+          return <Square key={i} value={squares[i]} onClick={() => onClick(i)} isWinning={isWinning} />;
+        }
+
+        return <div className="board">{Array.from({length:9}).map((_,i)=>renderSquare(i))}</div>;
+      }
+
+      function Game(){
+        const [history, setHistory] = useState([Array(9).fill(null)]);
+        const [step, setStep] = useState(0);
+        const squares = history[step].slice();
+        const win = calculateWinner(squares);
+        const xIsNext = (step % 2) === 0;
+
+        function handleClick(i){
+          if (win || squares[i]) return;
+          const next = squares.slice();
+          next[i] = xIsNext ? 'X' : 'O';
+          const newHistory = history.slice(0, step+1).concat([next]);
+          setHistory(newHistory);
+          setStep(step+1);
+        }
+
+        function jumpTo(move){ setStep(move); }
+
+        function reset(){ setHistory([Array(9).fill(null)]); setStep(0); }
+
+        return (
+          <div className="game">
+            <div>
+              <Board squares={squares} onClick={handleClick} winningLine={win && win.line} />
+            </div>
+            <div className="info">
+              <div><strong>Next:</strong> {win ? '—' : (xIsNext ? 'X' : 'O')}</div>
+              <div style={{marginTop:8}}>
+                {win ? (<div><strong>Winner:</strong> {win.winner}</div>) : null}
+              </div>
+
+              <div className="controls">
+                <button onClick={reset}>Reset</button>
+              </div>
+
+              <div className="moves">
+                <strong>History</strong>
+                <ol>
+                  {history.map((_,move) => (
+                    <li key={move}>
+                      <button onClick={() => jumpTo(move)} style={{fontWeight: move===step? 'bold':'normal'}}>
+                        {move===0? 'Go to game start' : `Go to move #${move}`}
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById('root')).render(<Game />);
+    </script>
+  </body>
+</html>

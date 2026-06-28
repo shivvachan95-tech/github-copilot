@@ -1,0 +1,10 @@
+:root{ --bg:#f7fafc; --card:#fff; --muted:#6b7280; --accent:#f59e0b }
+body{ font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); margin:0; padding:24px }
+.container{ max-width:900px; margin:0 auto }
+.game{ display:flex; gap:24px; align-items:flex-start }
+.board{ display:grid; grid-template-columns:repeat(3,96px); gap:8px }
+.square{ width:96px; height:96px; display:flex; align-items:center; justify-content:center; font-size:40px; background:var(--card); border-radius:8px; border:1px solid #e6edf3; cursor:pointer }
+.square.winning{ background:#fffbeb; border:2px solid var(--accent) }
+.info{ max-width:300px }
+.moves{ margin-top:12px }
+.controls{ margin-top:12px }

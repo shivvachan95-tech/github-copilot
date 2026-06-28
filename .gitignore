@@ -1,0 +1,44 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vite / build outputs
+dist/
+.vite/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Editor/IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# System files
+Thumbs.db
+
+# Misc
+.cache/
+.parcel-cache/
+*.tsbuildinfo
+
+# Ignore local node_modules in nested projects explicitly
+/tick-tock/node_modules/
